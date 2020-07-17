@@ -1,8 +1,6 @@
 // http://api.openweathermap.org/data/2.5/forecast?id=524901&APPID={YOUR API KEY}
 // degrees symbol =  \xB0
 
-
-
  async function getWeather(userInput = 'houston') {
   try {
     const weather = await fetch(`http://api.openweathermap.org/data/2.5/forecast?q=${userInput}&units=imperial&APPID=130c4575c46f70147def89670f33034f`, {mode: 'cors'});
@@ -31,7 +29,7 @@ async function renderWeather(callback, userInput) {
   const weatherCondition = document.createElement('p');
   const weatherData = await callback(userInput);
   const dailyTempOptions = {weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'}
-  
+
   cityName.textContent = `${weatherData.city}, ${weatherData.country}`;
   date.textContent = `${new Date().toLocaleDateString(undefined, dailyTempOptions)}`;
   currentTemp.textContent = `${weatherData.currentTemp}\xB0F`;
@@ -48,12 +46,13 @@ renderWeather(getWeather);
 
 (function getLocation() {
   const searchBtn = document.querySelector('i');
+
   searchBtn.addEventListener('click', () => {
     let weatherContainer = document.getElementById('weather-container');
     while(weatherContainer.firstChild) { 
       weatherContainer.removeChild(weatherContainer.firstChild) 
     }
-
+    
     let userInput = document.querySelector('input');
     renderWeather(getWeather, userInput.value);
     userInput.value = '';
