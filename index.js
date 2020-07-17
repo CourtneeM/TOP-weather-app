@@ -10,9 +10,11 @@ const getWeather = async function (userInput = 'houston') {
     const weatherData = {
       city: response.city.name,
       country: response.city.country,
+      currentTemp: Math.round(response.list[0].main.temp),
       highTemp: Math.round(response.list[0].main.temp_max),
       lowTemp: Math.round(response.list[0].main.temp_min),
     }
+    console.log(response);
     return weatherData;
   } catch(error) {
     console.log(error);
@@ -22,14 +24,20 @@ const getWeather = async function (userInput = 'houston') {
 async function renderWeather(callback, userInput) {
   const weatherContainer = document.getElementById('weather-container');
   const cityName = document.createElement('h2');
-  const dailyTemp = document.createElement('p');
+  const date = document.createElement('p');
+  const currentTemp = document.createElement('p');
+  const highLowTemp = document.createElement('p');
   const weatherData = await callback(userInput);
   const dailyTempOptions = {weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'}
 
   cityName.textContent = `${weatherData.city}, ${weatherData.country}`;
-  dailyTemp.textContent = `Weather for ${new Date().toLocaleDateString(undefined, dailyTempOptions)} | High: ${weatherData.highTemp}\xB0F / Low: ${weatherData.lowTemp}\xB0F`;
+  date.textContent = `${new Date().toLocaleDateString(undefined, dailyTempOptions)}`;
+  currentTemp.textContent = `${weatherData.currentTemp}\xB0F`;
+  highLowTemp.textContent = `High: ${weatherData.highTemp}\xB0F / Low: ${weatherData.lowTemp}\xB0F`;
   weatherContainer.appendChild(cityName);
-  weatherContainer.appendChild(dailyTemp);
+  weatherContainer.appendChild(date);
+  weatherContainer.appendChild(currentTemp);
+  weatherContainer.appendChild(highLowTemp);
   console.log(weatherData);
 }
 renderWeather(getWeather);
@@ -41,7 +49,7 @@ renderWeather(getWeather);
     while(weatherContainer.firstChild) { 
       weatherContainer.removeChild(weatherContainer.firstChild) 
     }
-    
+
     let userInput = document.querySelector('input');
     renderWeather(getWeather, userInput.value);
     userInput.value = '';
